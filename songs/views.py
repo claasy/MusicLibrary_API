@@ -7,28 +7,36 @@ from .models import Song
 
 @api_view(['GET','POST'])
 def songs_list(request):
-    
     if request.method == 'GET':
-        songs=Song.objects.all()
-        serializer = SongSerializer(songs, many=True)
-        return Response (serializer.data, status=status.HTTP_200_OK)   
+        songs = Song.objects.all()
+        serializer = SongSerializer(songs, many = True)
+        return Response (serializer.data, status = status.HTTP_200_OK)   
     elif request.method == 'POST':
-        serializer = SongSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        serializer = SongSerializer(data = request.data)
+        serializer.is_valid(raise_exception = True)
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status = status.HTTP_201_CREATED)
 
 @api_view(['GET','PUT','DELETE'])
 def song_detail(request, pk):
-    song=get_object_or_404(Song, pk=pk)
+    song = get_object_or_404(Song, pk=pk)
     if request.method == 'GET':
-        serializer=SongSerializer(song);
-        return Response(serializer.data)
+        serializer = SongSerializer(song);
+        return Response (serializer.data)
     elif request.method == 'PUT':
-        serializer = SongSerializer(song, data=request.data)
-        serializer.is_valid(raise_exception=True)
+        serializer = SongSerializer(song, data = request.data)
+        serializer.is_valid(raise_exception = True)
         serializer.save()
-        return Response(serializer.data)
+        return Response (serializer.data)
     elif request.method == 'DELETE':
         song.delete()
-        return Response(status=status.HTTP_200_OK)
+        return Response(status = status.HTTP_200_OK)
+
+@api_view(['PATCH'])
+def song_likes(request,pk):
+    song = get_object_or_404(Song, pk=pk)
+    serializer = SongSerializer(song);
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data)
+
